@@ -6,8 +6,18 @@ namespace TechInternshipTask
     {
         static void Main(string[] args)
         {
-            var data = new DataRageCreator("01.03.2012", "03.04.2015");
-            Console.WriteLine(data.GetPrintableData());
+            try
+            {
+                //var data = new DataRageCreator(args[0], args[1]);
+                var data = new DataRageCreator("13.22", "");
+                Console.WriteLine(data.GetPrintableData());
+            }
+            catch
+            {
+
+                Console.WriteLine("ERROR - wrong input data ");
+                System.Environment.Exit(0);
+            }
 
         }
     }
