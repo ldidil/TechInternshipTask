@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using System;
 
 namespace TechInternshipTask.Tests
@@ -8,14 +9,17 @@ namespace TechInternshipTask.Tests
     {
         DataRageCreator _dataRageCreator;
 
-        [TestCase("01.01.2018","02.02.2019", "01.01.2018-02.02.2019")]
+        [TestCase("01.01.2018", "02.02.2019", "01.01.2018-02.02.2019")] //EU format
 
         [TestCase("01.01.2019", "02.02.2019", "01.01-02.02.2019")]
         [TestCase("01.01.2019", "02.01.2019", "01-02.01.2019")]
         [TestCase("02.02.2019", "01.01.2018", "01.01.2018-02.02.2019")]
 
+        [TestCase("02.20.2018", "03.30.2019", "20.02.2018-30.03.2019")] //US format
+
+
         [Test]
-        public void ShouldDataRageCreatorWorks(string data1, string data2, string expectResult)
+        public void ShouldPrintCorrectDate(string data1, string data2, string expectResult)
         {
             _dataRageCreator = new DataRageCreator(data1, data2);
 
@@ -24,13 +28,19 @@ namespace TechInternshipTask.Tests
             Assert.IsTrue(String.Equals(result, expectResult));
         }
 
-        [TestCase("", "12.12.2019", "12.13.2018-2.12.2019")]
+        [TestCase("")]
         [Test]
-        public void ShouldntDataRageCreatorWorks(string data1, string data2, string expectResult)
-        {
-            _dataRageCreator = new DataRageCreator(data1, data2);
 
-            Assert.IsTrue(_dataRageCreator.GetPrintableData() == null);
+        public void ShouldntParseMultiCultureThrowExeprion(string data1)
+        {
+            _dataRageCreator = new DataRageCreator();
+
+            Assert.That(() => _dataRageCreator.ParseMultiCulture(data1),
+            Throws.Exception
+            .TypeOf<NotSupportedException>()
+            .With.Property("Message")
+            .EqualTo("Given datestring is in a format that is not supported."));
+
         }
 
     }

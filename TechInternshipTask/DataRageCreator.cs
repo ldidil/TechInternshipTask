@@ -8,29 +8,35 @@ namespace TechInternshipTask
         private DateTime startingDate;
         private DateTime endDate;
 
+        private CultureInfo cultureInfo;
+
 
         public DataRageCreator(string str1, string str2)
         {
             startingDate = ParseMultiCulture(str1);
-            endDate = ParseMultiCulture(str2);
+            endDate = DateTime.Parse(str2, cultureInfo);
             if (startingDate > endDate)
             {
                 Swap();
             }
         }
 
+        public DataRageCreator()
+        {
+        }
+
         public string GetPrintableData()
         {
-            if (IsYearSame())
+            if (!IsYearSame())
             {
                 return GetFormatForOtherYear();
             }
 
-            if (IsMonthSame())
+            if (!IsMonthSame())
             {
                 return GetFormatForOtherMonth();
             }
-            if (IsDaySame())
+            if (!IsDaySame())
             {
                 return GetFormatForOtherDay();
             }
@@ -41,16 +47,28 @@ namespace TechInternshipTask
 
         private string GetFormatForOtherYear()
         {
-            return (startingDate.Day + "." + startingDate.Month + "." + startingDate.Year + "-" + endDate.Day + "." + endDate.Month + "." + endDate.Year);
+            return (startingDate.Day.ToString("00") + "." + 
+                startingDate.Month.ToString("00") + "." + 
+                startingDate.Year + "-" + 
+                endDate.Day.ToString("00") + "." + 
+                endDate.Month.ToString("00") + "." + 
+                endDate.Year);
         }
         private string GetFormatForOtherMonth()
         {
-            return (startingDate.Day + "." + startingDate.Month + "-" + endDate.Day + "." + endDate.Month + "." + endDate.Year);
+            return (startingDate.Day.ToString("00") + "." + 
+                startingDate.Month.ToString("00") + "-" + 
+                endDate.Day.ToString("00") + "." + 
+                endDate.Month.ToString("00") + "." + 
+                endDate.Year);
         }
 
         private string GetFormatForOtherDay()
         {
-            return (startingDate.Day + "-" + endDate.Day + "." + endDate.Month + "." + endDate.Year);
+            return (startingDate.Day.ToString("00") + "-" + 
+                endDate.Day.ToString("00") + "." + 
+                endDate.Month.ToString("00") + "." + 
+                endDate.Year);
         }
 
         private bool IsYearSame()
@@ -78,33 +96,32 @@ namespace TechInternshipTask
         }
 
 
-        private DateTime ParseMultiCulture(string dateString)
+        public DateTime ParseMultiCulture(string dateString)
         {
             DateTime output;
 
-            string[] formatsUs1 = { "MM.dd.yyyy" };
             string[] formatsEu1 = { "dd-MM-yyyy" };
-            string[] formatsEu2 = { "dd.MM.yyyy" };
+            string[] formatsEu2 = { "dd.MM.yyyy" }; //eu format is the default
+            string[] formatsUs1 = { "MM.dd.yyyy" };
 
-
-            if (DateTime.TryParseExact(dateString, formatsUs1, new CultureInfo("en-US"),
+            if (DateTime.TryParseExact(dateString, formatsEu1, cultureInfo = new CultureInfo("en-GB"),
                     DateTimeStyles.None, out output))
             {
                 return output;
             }
 
-            if (DateTime.TryParseExact(dateString, formatsEu1, new CultureInfo("en-GB"),
-                    DateTimeStyles.None, out output))
-            {
-                return output;
-            }
-
-            if (DateTime.TryParseExact(dateString, formatsEu2, new CultureInfo("de-De"),
+            if (DateTime.TryParseExact(dateString, formatsEu2, cultureInfo = new CultureInfo("de-De"),
                  DateTimeStyles.None, out output))
             {
                 return output;
             }
 
+
+            if (DateTime.TryParseExact(dateString, formatsUs1, cultureInfo= new CultureInfo("en-US"),
+                    DateTimeStyles.None, out output))
+            {
+                return output;
+            }
 
             throw new NotSupportedException("Given datestring is in a format that is not supported.");
         }
