@@ -8,13 +8,12 @@ namespace TechInternshipTask
         private DateTime startingDate;
         private DateTime endDate;
 
-        private CultureInfo cultureInfo;
-
 
         public DataRageCreator(string str1, string str2)
         {
-            startingDate = ParseMultiCulture(str1);
-            endDate = DateTime.Parse(str2, cultureInfo);
+            var formatter = new MultiCultureFormatter();
+            startingDate = formatter.ParseMultiCulture(str1);
+            endDate = formatter.ParseMultiCulture(str2);
             if (startingDate > endDate)
             {
                 Swap();
@@ -96,35 +95,7 @@ namespace TechInternshipTask
         }
 
 
-        public DateTime ParseMultiCulture(string dateString)
-        {
-            DateTime output;
-
-            string[] formatsEu1 = { "dd-MM-yyyy" };
-            string[] formatsEu2 = { "dd.MM.yyyy" }; //eu format is the default
-            string[] formatsUs1 = { "MM.dd.yyyy" };
-
-            if (DateTime.TryParseExact(dateString, formatsEu1, cultureInfo = new CultureInfo("en-GB"),
-                    DateTimeStyles.None, out output))
-            {
-                return output;
-            }
-
-            if (DateTime.TryParseExact(dateString, formatsEu2, cultureInfo = new CultureInfo("de-De"),
-                 DateTimeStyles.None, out output))
-            {
-                return output;
-            }
-
-
-            if (DateTime.TryParseExact(dateString, formatsUs1, cultureInfo= new CultureInfo("en-US"),
-                    DateTimeStyles.None, out output))
-            {
-                return output;
-            }
-
-            throw new NotSupportedException("Given datestring is in a format that is not supported.");
-        }
+       
     }
 
 }

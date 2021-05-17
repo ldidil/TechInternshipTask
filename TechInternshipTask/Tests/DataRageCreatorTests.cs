@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using System;
 
 namespace TechInternshipTask.Tests
@@ -28,20 +27,7 @@ namespace TechInternshipTask.Tests
             Assert.IsTrue(String.Equals(result, expectResult));
         }
 
-        [TestCase("")]
-        [Test]
-
-        public void ShouldntParseMultiCultureThrowExeprion(string data1)
-        {
-            _dataRageCreator = new DataRageCreator();
-
-            Assert.That(() => _dataRageCreator.ParseMultiCulture(data1),
-            Throws.Exception
-            .TypeOf<NotSupportedException>()
-            .With.Property("Message")
-            .EqualTo("Given datestring is in a format that is not supported."));
-
-        }
+      
 
     }
 

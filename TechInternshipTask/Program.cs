@@ -13,9 +13,6 @@ namespace TechInternshipTask
             }
             catch
             {
-
-                Console.WriteLine("ERROR - wrong input data ");
-                System.Environment.Exit(0);
             }
 
         }
