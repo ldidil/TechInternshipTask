@@ -25,16 +25,16 @@ namespace TechInternshipTask
 
         public string GetPrintableData()
         {
-            if (startingDate.Year != endDate.Year)
+            if (!startingDate.HasSameYearAs(endDate))
             {
                 return GetFormatFullDates();
             }
 
-            if (startingDate.Month != endDate.Month)
+            if (!startingDate.HasSameMonthAs(endDate))
             {
                 return GetFormatSameYear();
             }
-            if (startingDate.Day != endDate.Day)
+            if (!startingDate.HasSameDayAs(endDate))
             {
                 return GetFormatSameMonthAndYear();
             }
