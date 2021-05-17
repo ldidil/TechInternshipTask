@@ -8,7 +8,7 @@ namespace TechInternshipTask
         {
             try
             {
-                var data = new DataRageCreator(args[0], args[1]);
+                var data = new DateRangeCreator(args[0], args[1]);
                 Console.WriteLine(data.GetPrintableData());
             }
             catch

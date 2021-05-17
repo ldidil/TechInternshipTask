@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TechInternshipTask.Tests
 {
-    class MultiCultureFormatterTests
+    class DataParserTests
     {
 
         [TestCase("30.04.2018", 30,  4)]
@@ -17,7 +17,7 @@ namespace TechInternshipTask.Tests
                                                           int expectedMonth)
         {
 
-            var result = new MultiCultureFormatter().ParseMultiCulture(data1);
+            var result = new DateParser().Parse(data1);
             Assert.AreEqual(result.Day, expectedDay);
             Assert.AreEqual(result.Month, expectedMonth);
 
@@ -29,7 +29,7 @@ namespace TechInternshipTask.Tests
         public void ShouldtParseMultiCultureThrowExeprion(string data1)
         {
 
-            Assert.That(() => new MultiCultureFormatter().ParseMultiCulture(data1),
+            Assert.That(() => new DateParser().Parse(data1),
             Throws.Exception
             .TypeOf<NotSupportedException>()
             .With.Property("Message")

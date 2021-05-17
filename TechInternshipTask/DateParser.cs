@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace TechInternshipTask
 {
-    class MultiCultureFormatter
+    class DateParser : IDateParser
     {
-        DateTime output;
         private CultureInfo cultureInfo;
 
         string[] formatsEu1 = { "dd-MM-yyyy" };
         string[] formatsEu2 = { "dd.MM.yyyy" };
-        string[] formatsUs1 = { "MM.dd.yyyy" };
+        string[] formatsUs = { "MM.dd.yyyy" };
+        string[] formatsAsia = { "yyyy.mm.dd" };
 
 
-        public DateTime ParseMultiCulture(string dateString)
+        public DateTime Parse(string dateString)
         {
+            DateTime output;
+
             if (cultureInfo != null)
             {
                 return DateTime.Parse(dateString, cultureInfo);
@@ -34,12 +34,12 @@ namespace TechInternshipTask
                 return output;
             }
 
-
-            if (DateTime.TryParseExact(dateString, formatsUs1, cultureInfo = new CultureInfo("en-US"),
+            if (DateTime.TryParseExact(dateString, formatsUs, cultureInfo = new CultureInfo("en-US"),
                     DateTimeStyles.None, out output))
             {
                 return output;
             }
+
 
             throw new NotSupportedException("Given datestring is in a format that is not supported.");
         }
