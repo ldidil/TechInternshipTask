@@ -1,65 +1,113 @@
 ﻿using System;
+using System.Globalization;
 
 namespace TechInternshipTask
 {
     class DataRageCreator
     {
-        string[] string1 = new string[3];
-        string[] string2 = new string[3];
+        private DateTime startingDate;
+        private DateTime endDate;
 
 
         public DataRageCreator(string str1, string str2)
         {
-
-            if (str1.Split('.', '-').Length == 3 && str2.Split('.', '-').Length == 3)
+            startingDate = ParseMultiCulture(str1);
+            endDate = ParseMultiCulture(str2);
+            if (startingDate > endDate)
             {
-                string1 = str1.Split('.', '-');
-                string2 = str2.Split('.', '-');
+                Swap();
             }
-            else
-            {
-                Console.WriteLine("ERROR - wrong input data ");
-                System.Environment.Exit(0);
-            }
-
         }
 
         public string GetPrintableData()
         {
-            if (string1[2] != string2[2])
+            if (IsYearSame())
             {
-                if (Int32.Parse(string1[2]) > Int32.Parse(string2[2])) Swap();
-                return (string1[0] + "." + string1[1] + "." + string1[2] + "-" + string2[0] + "." + string2[1] + "." + string2[2]);
+                return GetFormatForOtherYear();
             }
 
-            else
+            if (IsMonthSame())
             {
-                if (string1[1] != string2[1])
-                {
-                    if (Int32.Parse(string1[1]) > Int32.Parse(string2[1])) Swap();
-                    return (string1[0] + "." + string1[1] + "-" + string2[0] + "." + string2[1] + "." + string2[2]);
-                }
-                else
-                {
-                    if (string1[0] != string2[0])
-                    {
-                        if (Int32.Parse(string1[0]) > Int32.Parse(string2[0])) Swap();
-                        return string1[0] + "-" + string2[0] + "." + string2[1] + "." + string2[2];
-                    }
-                    else
-                    {
-                        return string2[0] + "." + string2[1] + "." + string2[2];
-                    }
-                }
+                return GetFormatForOtherMonth();
             }
+            if (IsDaySame())
+            {
+                return GetFormatForOtherDay();
+            }
+
+            return  ( endDate.Day + "." + endDate.Month + "." + endDate.Year);
+
         }
+
+        private string GetFormatForOtherYear()
+        {
+            return (startingDate.Day + "." + startingDate.Month + "." + startingDate.Year + "-" + endDate.Day + "." + endDate.Month + "." + endDate.Year);
+        }
+        private string GetFormatForOtherMonth()
+        {
+            return (startingDate.Day + "." + startingDate.Month + "-" + endDate.Day + "." + endDate.Month + "." + endDate.Year);
+        }
+
+        private string GetFormatForOtherDay()
+        {
+            return (startingDate.Day + "-" + endDate.Day + "." + endDate.Month + "." + endDate.Year);
+        }
+
+        private bool IsYearSame()
+        {
+            return startingDate.Year == endDate.Year;
+        }
+
+        private bool IsMonthSame()
+        {
+            return startingDate.Month == endDate.Month;
+        }
+
+        private bool IsDaySame()
+        {
+            return startingDate.Day == endDate.Day;
+        }
+
 
         private void Swap()
         {
-            var tempStr = string1;
-            string1 = string2;
-            string2 = tempStr;
+            var temp = startingDate;
+            startingDate = endDate;
+            endDate = temp;
 
         }
+
+
+        private DateTime ParseMultiCulture(string dateString)
+        {
+            DateTime output;
+
+            string[] formatsUs1 = { "MM.dd.yyyy" };
+            string[] formatsEu1 = { "dd-MM-yyyy" };
+            string[] formatsEu2 = { "dd.MM.yyyy" };
+
+
+            if (DateTime.TryParseExact(dateString, formatsUs1, new CultureInfo("en-US"),
+                    DateTimeStyles.None, out output))
+            {
+                return output;
+            }
+
+            if (DateTime.TryParseExact(dateString, formatsEu1, new CultureInfo("en-GB"),
+                    DateTimeStyles.None, out output))
+            {
+                return output;
+            }
+
+            if (DateTime.TryParseExact(dateString, formatsEu2, new CultureInfo("de-De"),
+                 DateTimeStyles.None, out output))
+            {
+                return output;
+            }
+
+
+            throw new NotSupportedException("Given datestring is in a format that is not supported.");
+        }
     }
+
 }
